@@ -1,19 +1,36 @@
+import asyncio
+from flask import Flask
+import threading
 import os
-import telebot
+from telegram import Update
+from telegram.ext import ApplicationBuilder, MessageHandler, filters
+from groq import Groq
 
-# Render-এর Environment Variable থেকে টোকেন নেবে
-API_TOKEN = os.environ.get('BOT_TOKEN')
-bot = telebot.TeleBot(API_TOKEN)
+TOKEN = "8407425681:AAGdbUvAvx5lU5JQGRnzX5J4voPPr0NSSiM"
+API_KEY = "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"
 
-# /start কমান্ডের উত্তর
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "হ্যালো! আপনার ম্যানেজার বট এখন সচল আছে।")
+client = Groq(api_key=API_KEY)
+app_server = Flask(__name__)
 
-# টেস্ট করার জন্য যেকোনো মেসেজের উত্তর
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, "আমি আপনার মেসেজ পেয়েছি!")
+@app_server.route('/')
+def home(): return "Bot is Alive"
+
+async def reply(update, context):
+    if not update.message or not update.message.text: return
+    try:
+        chat = client.chat.completions.create(
+            messages=[{"role": "user", "content": update.message.text}],
+            model="llama-3.1-70b-versatile",
+        )
+        await update.message.reply_text(chat.choices[0].message.content)
+    except Exception as e: print(e)
+
+def run_flask():
+    port = int(os.environ.get("PORT", 10000))
+    app_server.run(host='0.0.0.0', port=port)
 
 if __name__ == "__main__":
-    bot.infinity_polling()
+    threading.Thread(target=run_flask, daemon=True).start()
+    bot = ApplicationBuilder().token(TOKEN).build()
+    bot.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), reply))
+    bot.run_polling()
