@@ -7,7 +7,7 @@ from telegram.ext import ApplicationBuilder, MessageHandler, filters
 from groq import Groq
 
 # আপনার নতুন টোকেন এবং এপিআই কী
-TOKEN = "8035903740:AAF8jWnnI11lh9JHbqPHKFsCrkvOv4is-Lg"
+TOKEN = "8598005422:AAFKR29UuigHMDVeZLW4NlNHTBBGJYRfqzE"
 API_KEY = "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"
 
 client = Groq(api_key=API_KEY)
