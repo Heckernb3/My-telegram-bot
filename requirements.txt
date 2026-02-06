@@ -1,1 +1,4 @@
-pyTelegramBotAPI
+python-telegram-bot
+groq
+flask
+
