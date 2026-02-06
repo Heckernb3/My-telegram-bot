@@ -6,7 +6,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters
 from groq import Groq
 
-TOKEN = "8407425681:AAGdbUvAvx5lU5JQGRnzX5J4voPPr0NSSiM"
+TOKEN = "8407425681:AAGiLjFLvj3hWCdcb5Gw1Dbj5UN7-7Ow6Z0"
 API_KEY = "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"
 
 client = Groq(api_key=API_KEY)
